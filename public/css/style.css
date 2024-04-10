@@ -12,6 +12,7 @@ body {
 }
 
 #chalkboard {
+    margin-top: 40px;
     position: relative;
     width: 800px;
     height: 600px;
@@ -27,4 +28,31 @@ body {
     top: 0;
     left: 0;
     cursor: crosshair;
+}
+
+/* Styles for the buttons */
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #5c5c5c;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #7a7a7a;
+}
+
+/* Additional style if you want the "Erase" button to look different */
+#eraseButton {
+    background-color: #bb3333;
+}
+
+#eraseButton:hover {
+    background-color: #d54444;
 }
