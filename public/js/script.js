@@ -1,12 +1,10 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Get canvas element and setup drawing context
+document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('chalkboardCanvas');
     const ctx = canvas.getContext('2d');
-    ctx.strokeStyle = '#fff'; // Chalk-like white color
     ctx.lineWidth = 5;
+    ctx.strokeStyle = '#ffffff';
     ctx.lineCap = 'round';
 
-    // Drawing state
     let isDrawing = false;
 
     function startDrawing(e) {
@@ -14,27 +12,45 @@ document.addEventListener("DOMContentLoaded", function() {
         ctx.beginPath();
         ctx.moveTo(e.offsetX, e.offsetY);
     }
-    
+
     function draw(e) {
         if (!isDrawing) return;
         ctx.lineTo(e.offsetX, e.offsetY);
         ctx.stroke();
     }
-    
+
     function stopDrawing() {
         isDrawing = false;
     }
-    
-    // Event listeners for drawing
+
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
 
-    // Function to capture the drawing on the canvas every 0.5 seconds
-    setInterval(() => {
-        const canvasData = canvas.toDataURL(); // This captures the canvas drawing as a data URL
-        // You can process the canvasData as needed, send it to a server, etc.
-        console.log('Snapshot taken: ', canvasData); // As an example, this will log the data URL to the console.
-    }, 500);
+    function sendSnapshotToServer(imageData) {
+        fetch('http://localhost:3000/upload-snapshot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ image: imageData })
+        })
+        .then(response => {
+            // Check if response was successful
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json(); // Parse JSON response
+        })
+        .then(data => console.log(data.message))
+        .catch((error) => console.error('Error:', error));
+    }
+
+    function takeSnapshot() {
+        const imageData = canvas.toDataURL('image/png');
+        sendSnapshotToServer(imageData);
+    }
+
+    setInterval(takeSnapshot, 500);
 });
