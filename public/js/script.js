@@ -74,5 +74,16 @@ document.addEventListener('DOMContentLoaded', function () {
         sendSnapshotToServer(imageData);
     }
 
+    function fetchDataAndUpdateOutputs() {
+        fetch('http://localhost:3000/outputs')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('hindiOutput').value = data.hindi;
+                document.getElementById('englishOutput').value = data.english;
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
     setInterval(takeSnapshot, 500);
+    setInterval(fetchDataAndUpdateOutputs, 500);
 });

@@ -26,4 +26,8 @@ app.post('/upload-snapshot', (req, res) => {
     });
 });
 
+app.get('/outputs', (req, res) => {
+    res.sendFile('/Users/advaysingh/Documents/projects/hindi_classification/server/outputs.json');
+  });
+
 app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
