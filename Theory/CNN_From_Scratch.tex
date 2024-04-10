@@ -1,0 +1,246 @@
+\documentclass[11pt,letterpaper]{amsbook}
+
+\usepackage{amsmath,amsthm,graphicx,color,enumerate,color,spverbatim,setspace}
+\usepackage[all,2cell,ps]{xy}
+\usepackage{amsfonts}
+
+
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{amsmath}
+
+\usepackage[Glenn]{fncychap}
+
+\newcommand{\chspace}{\vspace{-5em}}
+
+
+
+\newcommand{\Mod}[2]{\kern.1em\mathrel{\textsc{rem}}(#1,#2)}
+\newcommand{\quo}[2]{\kern.1em\mathrel{\textsc{quo}}(#1,#2)}
+\newcommand{\mydef}[1]{{\bf #1}}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{\hspace{-2.5em} \bf  Definition}[chapter] 
+\newtheorem{experiment}[definition]{\hspace{-2.5em} \bf Experiment}
+\newtheorem{problem}[definition]{\hspace{-2.5em} \bf  Problem}
+\newtheorem{theorem}[definition]{\hspace{-2.5em} \bf Theorem}
+\newtheorem{conjecture}[definition]{\hspace{-2.5em} \bf Conjecture}
+\newtheorem{proposition}[definition]{\hspace{-2.5em} \bf Proposition}
+\newtheorem{remark}[definition]{\hspace{-2.5em} \bf Remark}
+\newtheorem{investigation}[definition]{\hspace{-2.5em} \bf Investigation}
+\newtheorem{lemma}[definition]{\hspace{-2.5em} \bf Lemma}
+\newtheorem{corollary}[definition]{\hspace{-2.5em} \bf Corollary}
+\newtheorem{algorithm}[definition]{\hspace{-2.5em} \bf Algorithm}
+\newtheorem{example}[definition]{\hspace{-2.5em} \bf Example}
+\newtheorem{notation}[definition]{\hspace{-2.5em} \bf Notation}
+\newtheorem{convention}[definition]{\hspace{-2.5em} \bf Convention}
+
+% only use for supp exercises
+\newtheorem{exercise}{\hspace{-2.5em} \bf Exercise}
+
+
+\numberwithin{definition}{chapter}
+\numberwithin{exercise}{chapter}
+
+\numberwithin{section}{chapter}
+
+\newcommand{\bbN}{\mathbb{N}}
+\newcommand{\bbQ}{\mathbb{Q}}
+\newcommand{\bbR}{\mathbb{R}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\lub}{\text{lub}}
+\newcommand{\glb}{\text{glb}}
+\newcommand{\Int}{\text{Int}}
+
+
+\title{CNNs From Scratch}
+\author{Advay Singh}
+\date{March 2024}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Introduction}
+
+\section{Image Processing}
+
+\subsection{Convolution}
+
+\subsection{Pooling}
+
+\section{Fully-Connected Multi Layer Perception}
+Now, with our inputs in place, will begin discussion regarding the a Fully-Connected Multi Layer Perception. \\
+\begin{align}
+    x_i &= \text{$ith$ input} \\
+    w^{k}_{ij} &= \text{weight from $ith$ input to $jth$ output in the $kth$ layer} \\
+    b^{k}_{ji} &= \text{bias from $ith$ input to $jth$ output in the $kth$ layer} \\
+    z^k_j &= \text{$jth$ input for activation at layer $k$} \\
+    \alpha^k_j &= \text{$jth$ activated val at layer $k$} \\
+    y_i &= \text{$ith$ true label} \\
+    l &= \text{number of hidden layers} \\
+    n^k &= \text{number of activations for layer $k$} \\
+    Y_i &= \text{$ith$ predicted output} \\
+    E_i &= \text{$ith$ error} \\
+    \Delta w &= \text{change to weights} \\
+    \Delta b &= \text{change to biases} \\
+    a &= \text{learning rate}.
+\end{align}
+
+\subsection{Forward Propagation}
+The $x$ and $y$ are both lists of inputs and labels respectively. Other terms, require derivation. \vspace{2em}
+\subsubsection{Weights and Biases}
+Weights and Biases are both 2-dimensional arrays. Note that there are multiple of these, intact, $l+1$ of each in a Fully-Connected Neural Network. \\
+Initially, these arrays are filled with random values which are eventually red-fined through gradient-decent. The length of these arrays can be determined through matrix multiplication. The matrix $w^k$'s $a X b$ where $a = n^{k-1}$ and $b = n^k$. For this, the initial layer $k-1$ is reshaped to $n^{k-1} \cdot 1$ and $k$ is reshaped $1 \cdot n^k$. It's a similar process for the biases.
+\vspace{2em}
+\subsubsection{Zs (Activation Inputs)}
+With the weights biases, and inputs in-place, we may derive our $zs$. 
+\begin{equation}
+    z^k_j = \sum_i x^{k-1}_i w^k_{ij}.
+\end{equation}
+Note we need not derive $zs$ for $k \ge l$.
+\subsubsection{Activation Function}
+There are many activation functions. ReLU, Sigmoid, and TanH to name a few. The following defines the \textbf{Sigmoid Activation Function}, $\ds \sigma(z) : \mathbb{R} \to (0, 1)$. The reason for these function is to \textbf{introduce non-linearity} in the dataset. The more hidden layers there are, the more complex problems the CNN is capable of solving. The cost? Increased computation time.
+\begin{equation}
+    \alpha^k_j = \sigma(z^k_j) = \frac{1}{1+e^{-(z^k_j)}}.
+\end{equation} 
+Note that $\forall \alpha$, $\alpha \in (0, 1)$. Such normalization is often seen in activation functions. However, the purpose is the non-linear nature of the sigmoid graph. 
+\\
+We also have the \textbf{ReLU} activation function:
+$R'(x) = $
+\[ \begin{cases} 
+      0 & x< 0 \\
+      x &  x\geq 0. \\
+   \end{cases}
+\]
+More on this as we compute their derivatives.
+\vspace{2em}
+\subsubsection{Softmax Activation Function}
+Because $\forall \alpha$, $\alpha \in (0, 1)$ it's impossible to use them to predict values outside that range or non-numerical objects. In the latter case, we apply \textbf{Softmax} to the $\ds z^l$ list while a simple regression activation function often suffices for numerical classifications.
+\begin{equation}
+    Y_i = S(x_i) = \frac{e^{x_i}}{\sum^{n^j}_{j} e^{x_j}}.
+\end{equation}
+Due to the Softmax function, $\forall Y_i, Y_i \in (0, 1)$ meaning that $S(x): \mathbb{R} \to [0, 1]$. To compare this to $y_i$, we convert $\forall y_i \in \{0, 1\}$. Where only the true classification $y_{true} = 1$ while every other $y_i = 0$. \\ \\
+With this, we have the forward propagation function can be generated. The inputs for the function are $x$, the inputs and true labels. The outputs: $Y$ an array of the predicted outputs. Additionally, other functors and parameters can be used, including which activation function, etc.
+\newpage
+
+
+\subsection{Back Propagation \& Gradient Decent} 
+\vspace{1em}
+Firstly, we must convert the labels $y_i$ to values $\in \{0, 1\}$ \\
+
+\subsubsection{Error Function}
+The error function compares $Y_i \land y_i$ and is responsible for generating $\Delta w \land \Delta b$ for gradient decent. For this, we define a cost function.
+\begin{equation}
+    E_i = C(i) = \frac{(Y_i - y_i)^2}{2}
+\end{equation}
+In our computations, we use
+\begin{equation}
+    E_{tot} = C(n^l) = \sum^{n^l}_i \frac{(Y_i - y_i)^2}{2}
+\end{equation}
+Therefore, through each iteration, we derive $\Delta w^{l}_{ji}\land \Delta b^{l}_{ji}$ based on $\ds E_{i}$. And update the $w$ and $b$ through back propagation. Iterating through the training set is considered one \textbf{epoch}. Notably, every epoch increases accuracy for regular gradient decent, however, \textbf{Stochastic Gradient Decent}'s accuracy plateaus over time. More on the later.
+\vspace{2em}
+\subsubsection{Calculating $\Delta w$ And $\Delta b$}
+Firstly, we begin with our final layer.  $\ds \frac{\delta E_i}{\delta w_ij}$ and $\ds \frac{\delta E_i}{\delta b_ij}$.  \\
+Breaking down the function: 
+\begin{align}
+    \frac{\delta E_i}{\delta w_{}ij} &= \frac{\delta E_i}{\delta S(z_i)} \cdot \frac{\delta S(z_i)}{\delta z^l_i} \cdot \frac{\delta z^l_i}{\delta w_{ij}}.
+\end{align}
+
+Hence we derive all the parts.
+\begin{align}
+    \frac{\delta E_i}{\delta S(x_i)} &= \frac{\delta}{\delta S(x_i)} \frac{(Y_i - y_i)^2}{2} \\ &= \frac{\delta}{\delta S(x_i)} \frac{(S(x_i) - y_i)^2}{2} \\ &= (S(x_i) - y_i) \\ &= (Y_i - y_i).
+\end{align}
+Note that for our purposes, $x_i$ refers to $z^l_i$. For the following calculation, $l$ is implicit for $z_i$ because we are deriving for the final layer.
+\begin{align}
+    \frac{S(z_i)}{\delta z_i} &= S(z_i) (1 - S(Z_i)).
+\end{align}
+$\ds J_{softmax}$ is known as the $\textbf{Jacobian Matrix}$ and as modeled like such 
+\vspace{1em}
+
+$\begin{bmatrix}
+    \frac{\delta S(1)}{z_1} & \frac{\delta S(1)}{\delta z_2} & \cdots & \frac{\delta S(1)}{\delta z_{i}} \\ \frac{\delta S(2)}{\delta z_1} & \frac{\delta S(2)}{\delta z_2} & \cdots & \frac{\delta S(2)}{\delta z_{i}} \\ \vdots & \vdots & \vdots & \vdots \\ \frac{\delta S(i)}{\delta z_1} & \frac{\delta S(i)}{\delta z_2} & \cdots & \frac{\delta S(i)}{\delta z_{i}}
+\end{bmatrix}$
+\\\\where $\ds i = n^l$. We will derive the $S(x_i)$ function later.
+
+\vspace{2em}
+Now we derive $\Delta w$ for the final layer (layer going from $jth$ input to $ith$ output.
+\begin{equation}
+    \frac{\delta z_i}{\delta w_{ij}} = \frac{\delta}{\delta w_{ij}} \sum^{n^{i - 1}}_p x_p w_ip + b_ip 
+\end{equation}
+Note that for $f(w) = \ds \frac{\delta}{\delta w_{ij}} \sum^{n^{i - 1}}_p x_p w_ip + b_ip $, $(p = j) \iff f(z) = x_j  $ and $(j \neq i \iff f(z) = 0)$. Therefore, \begin{equation}
+    \frac{\delta}{\delta w_{ij}} \sum^{n^{i - 1}}_p x_p w_ip + b_ip = x_j
+\end{equation}
+\\
+Note that the $\ds \frac{\delta E_i}{\delta S(x_i)} \cdot \frac{\delta S(x_i)}{\delta z^l_i}$ remain the same for $\Delta b$, however, $\ds \frac{\delta z_i}{\delta b_{ij}} = 1$.
+So we have \begin{align}
+    \Delta w_{ij} = \frac{\delta E_i}{\delta w_{ij}} =& (Y_i - y_i) \cdot S(z_i)(1 - S(z_i)) \cdot x_j \\
+    \Delta b_{ij} = \frac{\delta E_i}{\delta b_{ij}} &= (Y_i - y_i) \cdot S(z_i)(1 - S(z_i)).
+\end{align}
+\vspace{2em}
+\subsubsection{Softmax Derivative and Jacobin Matrix}
+Our goal in this segment is to define $\ds \frac{d S(z_i)}{d z_i}$. Firstly, \begin{equation}
+    \frac{\delta \ln(S(z_i))}{\delta z_i} = \frac{1}{S(z_i)} \frac{\delta S(z_i)}{\delta z_i}.
+\end{equation}
+Hence, we initially compute $\ds \frac{\delta \ln(S(z_i))}{\delta z_i}$.\begin{align}
+    \frac{\delta \ln(S(z_i))}{\delta z_i} &= \frac{\delta }{\delta z_i} \ln(\frac{e^{z_i}}{\sum^{n^j}_{j} e^{z_j}}) \\
+    &= \frac{\delta }{\delta z_i} \ln (e^{z_i}) - \frac{\delta }{\delta z_i}\ln(\sum^{n^j}_{j} e^{z_j}) \\
+    &= 1 - \frac{1}{\sum^{n^j}_{j} e^{z_j}} \frac{\delta }{\delta z_i}(\sum^{n^j}_{j} e^{z_j}).
+\end{align}
+Note that for $g(z) = \ds \frac{\delta }{\delta z_i}(\sum^{n^j}_{j} e^{z_j})$, $(j = i) \iff g(z) = 1 $ and $(j \neq i \iff g(z) = 0)$. Therefore, \begin{equation}
+  \frac{\delta \ln(S(z_i))}{\delta z_i} =  1 - S(z_i).
+\end{equation}
+And so we have that \begin{align}
+    \frac{\delta S(z_i)}{\delta z_i} &= S(z_i) \frac{\delta \ln(S(z_i))}{\delta z_i} \\
+    &= S(z_i) (1 - S(z_i)).
+\end{align}
+There is also an idea of \textbf{Temperature} $T$ which adds another layer of non-linearity to $S$. A smaller temperature favors greater $z_i$ and vice-versa.
+\begin{equation}
+     Y_i = S(x_i) = \frac{e^\frac{x_i}{t}}{\sum^{n^j}_{j} e^\frac{x_j}{t}}
+\end{equation}
+\vspace{2em}
+\subsubsection{Activation Function Derivative}
+The derivative of the activation function plays a similar role as the Softmax function derivative, just for earlier, hidden layers. 
+For now, we will be focusing on the Sigmoid function.
+\begin{align}
+    \frac{\delta}{\delta z_i}\alpha_i &= \frac{\delta}{\delta z_i}\sigma(z_i) \\
+    &= \frac{\delta}{\delta z_i}\frac{1}{1 + e^{-(z_i)}} \\ &= \frac{\delta}{\delta z_i}(1 + e^{-(z_i)})^{-1} \\ &= \frac{-1}{(1+e^{-(z_i)})^2} \frac{\delta}{\delta z_i} e^{-(z_i)} \\ &= \frac{-1}{(1+e^{-(z_i)})^2} -e^{-(z_i)} \\ &= \frac{e^{-(z_i)}}{(1+e^{-(z_i)})^2} \\ &= \frac{1}{1 + e^{-(z_i)}} \cdot \frac{e^{-(z_i)}}{1 + e^{-(z_i)}} \\ &= \frac{1}{1 + e^{-(z_i)}} \cdot (1 - \frac{1}{1 + e^{-(z_i)}}) \\ &= \sigma(z_i)(1 - \sigma(z_i)).
+\end{align}
+Look familiar? It's the same as $S$. 
+\\
+Notably, calculating the derivative of the ReLU function is much simpler.
+$R'(x) = $
+\[ \begin{cases} 
+      0 & x< 0 \\
+      1 &  x\geq 0. \\
+   \end{cases}
+\]
+Computationally, this often yields a much greater $\Delta w \land \Delta b$ allowing for a much faster back propagation process. 
+\vspace{2em}
+Hence, we can now proceed to calculate $\Delta w \land \Delta b$ for the hidden layers ( layers $< l$). The following computes $\ds \delta w^1_{ji}$ in a Neural Network with two layers ($l = 2$) with $p$ inputs.
+\begin{align}
+\frac{\delta E_i}{\delta w^1_{jp}} &=   \frac{\delta E_i}{\delta S(z^l_i)} \cdot \frac{\delta S(z^l_i)}{\delta z^l_i} \cdot \frac{\delta z^l_i}{\delta w^1_{jp}} \\
+&= \frac{\delta E_i}{\delta S(z^l_i)} \cdot \frac{\delta S(z^l_i)}{\delta z^l_i} \cdot w^l_{ij} \cdot \frac{\delta a^1_j}{\delta w^1_{jp}} \\ &= \frac{\delta E_i}{\delta S(z^l_i)} \cdot \frac{\delta S(z^l_i)}{\delta z^l_i} \cdot w^l_{ij} \cdot \frac{\delta \sigma(z^1_j)}{\delta z^1_j} \cdot \frac{\delta z^1_j}{\delta w^1_{jp}} \\ &= (Y_i - y_i) \cdot S(z^2_i)(1 - S(z^2_i)) \cdot w^2_{ij} \cdot \sigma(z^1_j)(1 - \sigma(z^1_j)) \cdot x_p.
+\end{align}
+This way, we can also obtain $\Delta b$.
+
+\begin{align}
+    \frac{\delta E_i}{\delta b^1_{jp}} &=   \frac{\delta E_i}{\delta S(z^l_i)} \cdot \frac{\delta S(z^l_i)}{\delta z^l_i} \cdot \frac{\delta z^l_i}{\delta b^1_{jp}} \\
+&= \frac{\delta E_i}{\delta S(z^l_i)} \cdot \frac{\delta S(z^l_i)}{\delta z^l_i} \cdot w^l_{ij} \cdot \frac{\delta a^1_j}{\delta b^1_{jp}} \\ &= \frac{\delta E_i}{\delta S(z^l_i)} \cdot \frac{\delta S(z^l_i)}{\delta z^l_i} \cdot w^l_{ij} \cdot \frac{\delta \sigma(z^1_j)}{\delta z^1_j} \cdot \frac{\delta z^1_j}{\delta b^1_{jp}} \\ &= (Y_i - y_i) \cdot S(z^2_i)(1 - S(z^2_i)) \cdot w^2_{ij} \cdot \sigma(z^1_j)(1 - \sigma(z^1_j)).
+\end{align}
+Now that we know how to compute $\Delta w \land \Delta b$ for all matrices, it's essential to understand how to automate the process for any computational application.
+\vspace{2em} 
+
+
+\subsubsection{Stochastic Gradient Decent}
+The learning rate $a$ has an impact but can cause for less overall accuracy. 
+\section{Efficiency Testing}
+
+\section{Application in Full-Stack Web Application}
+
+\end{document}
