@@ -1,23 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('chalkboardCanvas');
     const ctx = canvas.getContext('2d');
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = '#ffffff';
+    const drawLineWidth = 5;
+    const eraseLineWidth = 20; // Larger line width for eraser
+    ctx.strokeStyle = 'white';
     ctx.lineCap = 'round';
     let isDrawing = false;
     let isErasing = false;
 
     function startDrawing(e) {
         isDrawing = true;
-        isErasing = false;
-        ctx.beginPath();
-        ctx.moveTo(e.offsetX, e.offsetY);
-    }
-
-    function startErasing(e) {
-        isDrawing = true;
-        isErasing = true;
-        ctx.globalCompositeOperation = 'destination-out'; // Set the composite operation to erase
+        ctx.lineWidth = isErasing ? eraseLineWidth : drawLineWidth; // Set the lineWidth based on mode
+        ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
         ctx.beginPath();
         ctx.moveTo(e.offsetX, e.offsetY);
     }
@@ -30,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function stopDrawing() {
         isDrawing = false;
-        ctx.globalCompositeOperation = 'source-over'; // Reset the composite operation to draw
+        ctx.closePath();
     }
 
     function clearCanvas() {
@@ -46,8 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('clearButton').addEventListener('click', clearCanvas);
 
     // Hook up the erase function when the erase button is clicked
-    document.getElementById('eraseButton').addEventListener('click', () => {
-        isErasing = true;
+    document.getElementById('eraseButton').addEventListener('click', function() {
+        // Toggle erasing mode
+        isErasing = !isErasing;
+        // Change the button text based on erasing mode
+        this.textContent = isErasing ? 'Draw' : 'Erase';
     });
 
     function sendSnapshotToServer(imageData) {
