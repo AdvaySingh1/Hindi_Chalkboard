@@ -1,2 +1,6 @@
-
+# ignore large dataset
 data/
+
+# ignore node packet manager dependencies
+node_modules/
+
