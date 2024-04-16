@@ -14,9 +14,9 @@ body {
 #chalkboard {
     margin-top: 40px;
     position: relative;
-    width: 800px;
-    height: 600px;
-    background-image: url('https://cdn.pixabay.com/photo/2014/11/05/12/08/chalkboard-517818_1280.jpg'); /* Replace with your base chalkboard image */
+    width: 900px;
+    height: 550px;
+    background-image: url('https://t4.ftcdn.net/jpg/06/03/62/49/360_F_603624951_IZACWiiyIaeh1akP3ugKqKbQ2qCm2Dsd.jpg'); /* Replace with your base chalkboard image */
     background-size: cover;
     margin: 0 auto; /* Center the chalkboard */
     border: 5px solid #555;

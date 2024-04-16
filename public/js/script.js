@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('chalkboardCanvas');
     const ctx = canvas.getContext('2d');
-    const drawLineWidth = 5;
-    const eraseLineWidth = 20; // Larger line width for eraser
+    const drawLineWidth = 40;
+    const eraseLineWidth = 40; // Larger line width for eraser
     ctx.strokeStyle = 'white';
     ctx.lineCap = 'round';
     let isDrawing = false;
