@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('chalkboardCanvas');
     const ctx = canvas.getContext('2d');
-    const drawLineWidth = 40;
+    const drawLineWidth = 25;
     const eraseLineWidth = 40; // Larger line width for eraser
     ctx.strokeStyle = 'white';
     ctx.lineCap = 'round';
@@ -36,17 +36,17 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mouseout', stopDrawing);
 
-    // Hook up the clear function to a button if needed
+    // Clear button
     document.getElementById('clearButton').addEventListener('click', clearCanvas);
 
-    // Hook up the erase function when the erase button is clicked
+    // Click button
     document.getElementById('eraseButton').addEventListener('click', function() {
-        // Toggle erasing mode
+        // Becan erasing and switch mode
         isErasing = !isErasing;
-        // Change the button text based on erasing mode
+        // Switch mode
         this.textContent = isErasing ? 'Draw' : 'Erase';
     });
-
+    // Connect to hosting which is me :)
     function sendSnapshotToServer(imageData) {
         fetch('http://localhost:3000/upload-snapshot', {
             method: 'POST',
@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch((error) => console.error('Error:', error));
     }
 
+    // Take the snapshot
     function takeSnapshot() {
         const imageData = canvas.toDataURL('image/png');
         sendSnapshotToServer(imageData);
@@ -81,6 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching data:', error));
     }
 
-    setInterval(takeSnapshot, 500);
-    setInterval(fetchDataAndUpdateOutputs, 500);
+    setInterval(takeSnapshot, 100);
+    setInterval(fetchDataAndUpdateOutputs, 100);
 });

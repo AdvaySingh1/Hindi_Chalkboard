@@ -12,10 +12,10 @@ body {
 }
 
 #chalkboard {
-    margin-top: 40px;
+    margin-top: 10px;
     position: relative;
-    width: 900px;
-    height: 550px;
+    width: 540px;
+    height: 360px;
     background-image: url('https://t4.ftcdn.net/jpg/06/03/62/49/360_F_603624951_IZACWiiyIaeh1akP3ugKqKbQ2qCm2Dsd.jpg'); /* Replace with your base chalkboard image */
     background-size: cover;
     margin: 0 auto; /* Center the chalkboard */
@@ -71,10 +71,11 @@ button:hover {
     font-weight: bold;
 }
 
+ /* left align the text, can change later*/
 .output-boxes input {
-    width: 50px; /* Adjust width as needed */
+    width: 50px;
     padding: 5px;
-    text-align: center;
+    text-align: left;
     border: solid 2px #fff;
     background: transparent;
     color: #fff;
@@ -82,3 +83,4 @@ button:hover {
     font-weight: bold;
     letter-spacing: 1px;
 }
+
