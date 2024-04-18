@@ -5,12 +5,12 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 
-const port = 3000; // You can choose any port that isn't already in use
+const port = 3000; // port
 
 // Use body-parser middleware to handle parsing JSON
 app.use(bodyParser.json({ limit: '10mb' }));
 
-// Use cors middleware to enable CORS
+// Enable CORS
 app.use(cors());
 
 app.post('/upload-snapshot', (req, res) => {
